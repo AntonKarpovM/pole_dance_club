@@ -291,12 +291,44 @@ class Aboniment_Creator extends StatefulWidget {
   State<Aboniment_Creator> createState() => _Aboniment_CreatorState();
 }
 
+
+
+
 class _Aboniment_CreatorState extends State<Aboniment_Creator> {
+
+  @override
+  Widget build(BuildContext context) {
+
+
+    //контроллер текстовых полей на данный момент он один только для кнопки очискти
+    return Scaffold(
+        backgroundColor: Colors.white,
+        drawer: MenuDrawer(),
+        body: SingleChildScrollView(
+          child: FormAboniment(),
+        ),
+        appBar: AppBar(
+          title: Text('CLUB POLE DANCE'),
+          centerTitle: true,
+        ));
+  }
+}
+
+
+class FormAboniment extends StatefulWidget {
+  const FormAboniment({Key? key}) : super(key: key);
+
+  @override
+  FormAbonimentState createState() {
+    return FormAbonimentState();
+  }
+}
+
+//данный класс содержит собой форму
+class FormAbonimentState extends State<FormAboniment>{
+
   //переменная для логов
   logmonolog logm = logmonolog("Aboniment");
-
-
-
 
   //переменная для бд
   Data_Base Data_Base_work = Data_Base();
@@ -308,211 +340,276 @@ class _Aboniment_CreatorState extends State<Aboniment_Creator> {
   int? _KolVoDay;
   double? _Price;
   HiveList<User>? _Author;
+  //данная переменная нужна для определения пользователя который на данный момент использует приложение мы получаем пользователя(USER) в которого входид элементы
   User UserNowPage = User("Не найден", "Не найден", DateTime.now(), "Не найден");
+  //
+
+
+
 
   // вспомогательные переменные
   //  File? image;
 
   //1) Начало (Блог с функциями)
-      //1.1)Начало(функции с по выводу сообщений)(Основа)
-          void Toast(String Message){
-              ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: new Text(Message),duration: Duration(seconds: 1),));
-              print(Message);
-          }
-      //1.1)Конец
-      //1.2)Начало (функции проверки введенных данных)
-          int CheckInputDataForEmpty(ObjectChecksName,ObjectChecksData) {
-              //имя и описание функции
-                  String NameFunc= "CheckInputData";
-                  String DescriptionFunc= "Функция $NameFunc занимаеться тем что :проверяет веденные данные на наличеие пустого текста или null значений";
-                  logm.Message(NameFunc,DescriptionFunc,"нажата кнопка сохранить","запущена функция с параметрами(ObjectChecksName:[$ObjectChecksName],ObjectChecks:[$ObjectChecksData])");
-              //Переменные функции
-                  int _prov = 0;
+  //1.1)Начало(функции с по выводу сообщений)(Основа)
+  void Toast(String Message){
+    ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: new Text(Message),duration: Duration(seconds: 1),));
+    print(Message);
+  }
+  //1.1)Конец
+  //1.2)Начало (функции проверки введенных данных)
+  int CheckInputDataForEmpty(ObjectChecksName,ObjectChecksData) {
+    //имя и описание функции
+    String NameFunc= "CheckInputData";
+    String DescriptionFunc= "Функция $NameFunc занимаеться тем что :проверяет веденные данные на наличеие пустого текста или null значений";
+    logm.Message(NameFunc,DescriptionFunc,"нажата кнопка сохранить","запущена функция с параметрами(ObjectChecksName:[$ObjectChecksName],ObjectChecks:[$ObjectChecksData])");
+    //Переменные функции
+    int _prov = 0;
 
-              //Тело функции
-                  if(ObjectChecksData=="" || ObjectChecksData == null){Toast("Запоните $ObjectChecksName!");logm.Message(NameFunc,DescriptionFunc,"нажата кнопка сохранить","$ObjectChecksName не введен");_prov = 1;}
-                  return _prov;
-          }
-          CheckInputDataForFields(){
-            //имя и описание функции
-                String NameFunc= "CheckInputDataForFields";
-                String DescriptionFunc= "Функция $NameFunc занимаеться тем что :проверяет ввели все данные название абонимента,цену,итд";
-                logm.Message(NameFunc,DescriptionFunc,"нажата кнопка сохранить","запущена функция с параметрами(_NumberAbo:[$_NumberAbo],_NameAbo:[$_NameAbo],_DateCreate:[$_DateCreate],_KolVoZan:[$_KolVoZan], _KolVoDay:[$_KolVoDay],_Price:[$_Price],_Author:[$_Author])");
-            //Переменные функции
-                int CounterEmptyData = 0;
-            //переменны для данных (_NumberAbo:[$_NumberAbo],_NameAbo:[$_NameAbo],_DateCreate:[$_DateCreate],_KolVoZan:[$_KolVoZan], _KolVoDay:[$ _KolVoDay],_Price:[$_Price],_Author:[$_Author])
-            // Тело функции
-                CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_NumberAbo",_NumberAbo);
-                CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_NameAbo",_NameAbo);
-                CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_DateCreate",_DateCreate);
-                CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_KolVoZan",_KolVoZan);
-                CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_KolVoDay",_KolVoDay);
-                CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_Price",_Price);
-                CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_Author",_Author);
-                if(CounterEmptyData != 0){
-                    logm.Message(NameFunc,DescriptionFunc,"нажата кнопка сохранить","Одно из полей не введено количество пустых поле:[$CounterEmptyData]");
-                    return false;
-                }
-                return true;
+    //Тело функции
+    if(ObjectChecksData=="" || ObjectChecksData == null){Toast("Запоните $ObjectChecksName!");logm.Message(NameFunc,DescriptionFunc,"нажата кнопка сохранить","$ObjectChecksName не введен");_prov = 1;}
+    return _prov;
+  }
+  CheckInputDataForFields(){
+    //имя и описание функции
+    String NameFunc= "CheckInputDataForFields";
+    String DescriptionFunc= "Функция $NameFunc занимаеться тем что :проверяет ввели все данные название абонимента,цену,итд";
+    logm.Message(NameFunc,DescriptionFunc,"нажата кнопка сохранить","запущена функция с параметрами(_NumberAbo:[$_NumberAbo],_NameAbo:[$_NameAbo],_DateCreate:[$_DateCreate],_KolVoZan:[$_KolVoZan], _KolVoDay:[$_KolVoDay],_Price:[$_Price],_Author:[$_Author])");
+    //Переменные функции
+    int CounterEmptyData = 0;
+    //переменны для данных (_NumberAbo:[$_NumberAbo],_NameAbo:[$_NameAbo],_DateCreate:[$_DateCreate],_KolVoZan:[$_KolVoZan], _KolVoDay:[$ _KolVoDay],_Price:[$_Price],_Author:[$_Author])
+    // Тело функции
+    CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_NumberAbo",_NumberAbo);
+    CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_NameAbo",_NameAbo);
+    CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_KolVoZan",_KolVoZan);
+    CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_KolVoDay",_KolVoDay);
+    CounterEmptyData = CounterEmptyData + CheckInputDataForEmpty("_Price",_Price);
+    if(CounterEmptyData != 0){
+      logm.Message(NameFunc,DescriptionFunc,"нажата кнопка сохранить","Одно из полей не введено количество пустых поле:[$CounterEmptyData]");
+      return false;
+    }
+    return true;
 
 
 
-          }
-      //1.2)Окончание(функции проверки введенных данных)
-      //1.3 начало(функция для получения данных о пользователе по id)
-          Future<User> GetUserInfo(bool UserNow,int id) async {
-              //описание функции
-                  String NameFunc= "GetUserInfo";
-                  String DescriptionFunc= "Функция $NameFunc занимаеться тем что: получает информацию из определенного ящика DataApp о пользователе под ключем UserNow";
-                  logm.Message(NameFunc,DescriptionFunc,"нажатие кнопки меню","данная функция запущена");
+  }
+  //1.2)Окончание(функции проверки введенных данных)
+  //1.3 начало(функция для получения данных о пользователе по id)
+  Future<User> GetUserInfo(bool UserNow,int id) async {
+    //описание функции
+    String NameFunc= "GetUserInfo";
+    String DescriptionFunc= "Функция $NameFunc занимаеться тем что: получает информацию из определенного ящика DataApp о пользователе под ключем UserNow";
+    logm.Message(NameFunc,DescriptionFunc,"нажатие кнопки меню","данная функция запущена");
 
-              // переменные для работы функции
-                  int userid = -1;
-                  User U = User("Не найден", "Не найден", DateTime.now(), "Не найден");
-              //тело функции
-                 if(UserNow== true){
-                      var box = await Hive.openBox(Data_Base.dataapp);
-                      userid = await box.get("UserNow");
-                      await box.close();
-                      if(userid== null){
-                          return U;
-                      }
-                  }
-                  else{
-                    userid = id;
-                  }
-
-
-
-                  logm.Message(NameFunc,DescriptionFunc,"нажатие кнопки сохранить","получен ключ пользователя который входил userid:[$id]");
-                  var box = await Hive.openBox(Data_Base.user);
-                  U = await box.get(id);
-                  await box.close();
-                  logm.Message(NameFunc,DescriptionFunc,"нажатие кнопки меню","получен пользователь по ключу:[$id] который входил.Пользователь UserInfo:[$U]");
-                  return U;
-          }
-      //1.3 конец
-      //1.4 начало
-       ValueCheck(Value){
-         //описание функции
-         String NameFunc= "ValueCheck";
-         String DescriptionFunc= "Функция $NameFunc занимаеться тем что: получает значение проверяет его на null или пустоту и заменят на нулевое значение которое означает ошибку";
-         String NameEvent= "проверка значения элемента для избежания ошибки";
-         logm.Message(NameFunc,DescriptionFunc,NameEvent,"данная функция запущена с значениями Value:[$Value]");
-
-         // переменные для работы функции
-
-         //тело функции
-            if(Value == null){
-                logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value:[$Value] определенно как пустое теперь идет определине типа элемента");
-                if(Value.runtimeType == int){
-                    logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value:[$Value] тип int будет возвращен [0]");
-                    return 0;
-                }
-                if(Value.runtimeType == String){
-                    logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value:[$Value] тип String будет возвращен [Ожидайте...]");
-                    return "Ожидайте...";
-                }
-                if(Value.runtimeType == DateTime){
-                    logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value:[$Value] тип DateTime будет возвращен [DateTime.Now]");
-                    return DateTime.now();
-                }
-                if(Value.runtimeType == double){
-                  logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value:[$Value] тип double будет возвращен [0.0]");
-                  return 0.0;
-                }
-                logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value тип неопределен будет возвращен [$Value]");
-                return Value;
-            }
-         logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение проверено будет возвращен [$Value]");
-         return Value;
+    // переменные для работы функции
+    int userid = -1;
+    User U = User("Не найден", "Не найден", DateTime.now(), "Не найден");
+    //тело функции
+    if(UserNow== true){
+      var box = await Hive.openBox(Data_Base.dataapp);
+      userid = await box.get("UserNow");
+      await box.close();
+      if(userid== null){
+        return U;
       }
-      //1.4 конец
+    }
+    else{
+      userid = id;
+    }
+
+
+
+    logm.Message(NameFunc,DescriptionFunc,"нажатие кнопки сохранить","получен ключ пользователя который входил userid:[$id]");
+    var box = await Hive.openBox(Data_Base.user);
+    U = await box.get(id);
+    await box.close();
+    logm.Message(NameFunc,DescriptionFunc,"нажатие кнопки меню","получен пользователь по ключу:[$id] который входил.Пользователь UserInfo:[$U]");
+    return U;
+  }
+  //1.3 конец
+  //1.4 начало
+  ValueCheck(Value){
+    //описание функции
+    String NameFunc= "ValueCheck";
+    String DescriptionFunc= "Функция $NameFunc занимаеться тем что: получает значение проверяет его на null или пустоту и заменят на нулевое значение которое означает ошибку";
+    String NameEvent= "проверка значения элемента для избежания ошибки";
+    logm.Message(NameFunc,DescriptionFunc,NameEvent,"данная функция запущена с значениями Value:[$Value]");
+
+    // переменные для работы функции
+
+    //тело функции
+    if(Value == null){
+      logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value:[$Value] определенно как пустое теперь идет определине типа элемента");
+      if(Value.runtimeType == int){
+        logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value:[$Value] тип int будет возвращен [0]");
+        return 0;
+      }
+      if(Value.runtimeType == String){
+        logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value:[$Value] тип String будет возвращен [Ожидайте...]");
+        return "Ожидайте...";
+      }
+      if(Value.runtimeType == DateTime){
+        logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value:[$Value] тип DateTime будет возвращен [DateTime.Now]");
+        return DateTime.now();
+      }
+      if(Value.runtimeType == double){
+        logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value:[$Value] тип double будет возвращен [0.0]");
+        return 0.0;
+      }
+      logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение Value тип неопределен будет возвращен [$Value]");
+      return Value;
+    }
+    logm.Message(NameFunc,DescriptionFunc,NameEvent,"Значение проверено будет возвращен [$Value]");
+    return Value;
+  }
+  //1.4 конец
   //1) Окончание (Блог с функциями)
 
   //2)Начало (процедуры страницы)
 
   //2)Конец (процедуры страницы)
+
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        drawer: MenuDrawer(),
-        body: SingleChildScrollView(
-          child: Column(children: [
+      return new Form(
+        key: _formKey,
+        child: Column(children: [
 
-            Row(children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Ключ(Уникальный ключ):" + (UserNowPage.key ?? "Не найден")),
-                  Text("Автор:" + UserNowPage.Login ),
-                ],),
-            ],),
+      Row(children: [
+        Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Ключ(Уникальный ключ):" + (UserNowPage.key ?? "Не найден")),
+          Text("Автор:" + UserNowPage.Login ),
+        ],),
+    ],),
 
-            TextField(decoration: InputDecoration(
-              labelText: 'Введите уникальный номер для абонимента',
-              filled: true,
-              fillColor: Colors.white,
-            ),
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-               // onChanged: _ChangeNumberAbo
-            ),
-            TextField(decoration: InputDecoration(
-              labelText: 'Введите название',
-              filled: true,
-              fillColor: Colors.white,
-            ),
-             //   onChanged: _ChangeNameAbo
-            ),
+    TextFormField(
+    //данная часть кода отвечает за декорации
+    decoration: InputDecoration(
+    labelText: 'Введите уникальный номер для абонимента',
+    filled: true,
+    fillColor: Colors.white,
+    ),
 
-            TextField(decoration: InputDecoration(
-              labelText: 'Введите количество занятий',
-              filled: true,
-              fillColor: Colors.white,
-            ),
+    textInputAction: TextInputAction.done,
+    keyboardType: TextInputType.numberWithOptions(decimal: true),
+    validator: (value) {
+if(value == null|| value.isEmpty || value == int) {
+  return "Введите Текст(ЦЫФРАМИ)";
+}
+_NumberAbo = int.tryParse(value);
+return null;
+},
+    // onChanged: _ChangeNumberAbo
+    ),
+    TextFormField(
+    decoration: InputDecoration(
+    labelText: 'Введите название',
+    filled: true,
+    fillColor: Colors.white,
+    ),
+    //   onChanged: _ChangeNameAbo
+      onSaved: (value) {
+        _NumberAbo = int.tryParse(value!);
+      },
+      validator: (value) {
+        if(value == null|| value.isEmpty) {
+          return "Введите текст";
+        }
+        _NameAbo = value;
 
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-              //  onChanged: _ChangeKolVoZan
-            ),
+        return null;
+      },
+    ),
 
-            TextField(decoration: InputDecoration(
-              labelText: 'Введите количество дней',
-              filled: true,
-              fillColor: Colors.white,
-            ),
+    TextFormField(
+    decoration: InputDecoration(
+    labelText: 'Введите количество занятий',
+    filled: true,
+    fillColor: Colors.white,
+    ),
 
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-       //         onChanged: _ChangeKolVoDay
-            ),
+    textInputAction: TextInputAction.done,
+    keyboardType: TextInputType.numberWithOptions(decimal: true),
+    //  onChanged: _ChangeKolVoZan
+      validator: (value) {
+        if(value == null|| value.isEmpty) {
+          return "Введите Текст(ЦЫФРАМИ)";
+        }
+        _KolVoZan = int.parse(value);
+        return null;
+      },
+    ),
 
-            TextField(decoration: InputDecoration(
-              labelText: 'Введите стоимость абонимента',
-              filled: true,
-              fillColor: Colors.white,
+          TextFormField(
+    decoration: InputDecoration(
+    labelText: 'Введите количество дней',
+    filled: true,
+    fillColor: Colors.white,
+    ),
 
-            ),
+    textInputAction: TextInputAction.done,
+    keyboardType: TextInputType.numberWithOptions(decimal: true),
+    //         onChanged: _ChangeKolVoDay
 
 
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-          //      onChanged: _ChangePrice
-            ),
+      validator: (value) {
+        if(value == null|| value.isEmpty || value == int) {
+          return "Введите Текст(ЦЫФРАМИ)";
+        }
+        _KolVoDay = int.parse(value);
+        return null;
+      },
+    ),
 
-            ElevatedButton(onPressed: () {
-              CheckInputDataForFields();
-         //     CreateAboniment();
-            }, child: Text("Сохранить", style: TextStyle(fontSize: 22),)),
-            ElevatedButton(onPressed: () {},
-                child: Text("Очистить", style: TextStyle(fontSize: 22),)),
-          ],),
-        ),
-        appBar: AppBar(
-          title: Text('CLUB POLE DANCE'),
-          centerTitle: true,
-        ));
+          TextFormField(
+    decoration: InputDecoration(
+    labelText: 'Введите стоимость абонимента',
+    filled: true,
+    fillColor: Colors.white,
+
+    ),
+
+
+    textInputAction: TextInputAction.done,
+    keyboardType: TextInputType.numberWithOptions(decimal: true),
+    //      onChanged: _ChangePrice
+      validator: (value) {
+        if(value == null|| value.isEmpty || value == int) {
+          return "Введите Текст(ЦЫФРАМИ с копейками)";
+        }
+        _Price = double.tryParse(value);
+        return null;
+      },
+
+    ),
+
+    ElevatedButton(onPressed: () {
+   // CheckInputDataForFields();
+    //     CreateAboniment();
+
+      String NameFunc= "ElevatedButton(Сохранить)";
+      String DescriptionFunc= "Функция $NameFunc занимаеться тем что: обрабатывает кнопку (Сохранить)";
+      logm.Message(NameFunc,DescriptionFunc,"нажатие кнопки (сохранить)","данная функция запущена");
+      if(_formKey.currentState!.validate()){
+        logm.Message(NameFunc,DescriptionFunc,"нажатие кнопки (сохранить)","валидация пройдена полученны следующие данные[$_Price,$_KolVoDay,$_KolVoZan,$_NameAbo,$_NumberAbo ]");
+
+      }
+
+    }, child: Text("Сохранить", style: TextStyle(fontSize: 22),)),
+
+
+    ElevatedButton(onPressed: () {
+
+
+    },
+    child: Text("Очистить", style: TextStyle(fontSize: 22),)),
+    ],),
+      );
+    // TODO: implement build
+    //throw UnimplementedError();
   }
+
 }
